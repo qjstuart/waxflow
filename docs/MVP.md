@@ -78,6 +78,10 @@ Track details and Transition creation are contextual screens reached through the
 
 ## Remaining implementation decisions
 
-- Select the managed authentication component.
+- Decide whether the SPA needs a client-side router; TanStack Router is the
+  current candidate.
+- Select the managed authentication component; Better Auth is the current
+  candidate.
 - Contract-test Discogs search and choose the lowest-request backend strategy that satisfies the single-box search requirement.
-- Select the application stack and concrete local/synchronized persistence mechanism.
+- Select the concrete local and synchronized persistence mechanisms required
+  by the offline-first behavior.

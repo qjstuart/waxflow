@@ -11,6 +11,9 @@
 
 ## Current phase
 
-The project is still defining its implementation. Authentication provider,
-application stack, and persistence technology remain open decisions. Do not
-silently assume or encode choices for them.
+The initial application is a React single-page application created from
+Cloudflare's React starter and deployed to Cloudflare Workers. The client-side
+router, authentication component, and local/synchronized persistence
+technology remain open decisions. TanStack Router and Better Auth are leading
+candidates, not accepted choices. Do not silently assume or encode undecided
+choices.
