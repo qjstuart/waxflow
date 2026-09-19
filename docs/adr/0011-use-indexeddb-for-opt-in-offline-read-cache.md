@@ -1,0 +1,7 @@
+# Use IndexedDB for the opt-in offline read cache
+
+The React SPA stores private Account data in IndexedDB only after a DJ explicitly enables offline data on a Trusted Device. The resulting complete, account-scoped, disposable read cache keeps Library Search, Track details, and saved Transitions readable through poor or absent connectivity; without that consent, private Account data remains in application memory and is not persisted locally.
+
+## Consequences
+
+Before enabling offline data, Waxflow warns: “Offline data will remain on this device. Enable this only on a private or trusted device.” Cache refresh retrieves a complete Account snapshot and atomically replaces the cache; the initial product does not maintain a cursor or change log for incremental synchronization. All DJ-initiated mutations go exclusively to D1. After D1 confirms a mutation, Waxflow mirrors only the confirmed result into an enabled cache, with no optimistic, pending, or offline mutations. Refresh can happen automatically, and the DJ has an explicit pre-gig refresh action. The interface reports refresh success or failure and the last successful refresh time, while a failed or interrupted refresh preserves the previous complete cache. Signing out, changing Accounts, or choosing Remove Offline Data clears all private Waxflow data from IndexedDB and private browser caches. Better Auth session credentials are never stored in IndexedDB. The SPA shell must also be available offline because IndexedDB alone does not make the interface load without connectivity.
