@@ -12,11 +12,24 @@
 ## Current phase
 
 The initial application is a React single-page application created from
-Cloudflare's React starter and deployed to Cloudflare Workers. The client-side
-router, authentication component, and local/synchronized persistence
-technology remain open decisions. TanStack Router and Better Auth are leading
-candidates, not accepted choices. Do not silently assume or encode undecided
-choices.
+Cloudflare's React starter.
+
+### Decided
+
+- Deploy the React SPA, static assets, and Worker API together on Cloudflare Workers.
+- Use Better Auth for application-owned email-and-password Accounts.
+- Use Resend to deliver Better Auth email-verification and password-reset messages.
+- Use Cloudflare D1 as the system of record for Account, Library, and Transition data.
+- Use IndexedDB only as an opt-in, Account-scoped offline read cache on a Trusted Device; all mutations remain remote-first and authoritative only after D1 commits them.
+
+### Still open
+
+- Whether the SPA needs a client-side router; TanStack Router is a candidate, not an accepted choice.
+- The Discogs backend request strategy, pending contract tests of its search API.
+- The full Account snapshot format and exact automatic cache-refresh triggers.
+- The interface entry point for editing a Transition.
+
+Do not silently assume or encode undecided choices.
 
 ## Agent skills
 
