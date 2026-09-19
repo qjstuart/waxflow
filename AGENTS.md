@@ -17,3 +17,13 @@ router, authentication component, and local/synchronized persistence
 technology remain open decisions. TanStack Router and Better Auth are leading
 candidates, not accepted choices. Do not silently assume or encode undecided
 choices.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs are tracked in GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+This repository uses a single-context domain-doc layout. See `docs/agents/domain.md`.
