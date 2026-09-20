@@ -8,6 +8,12 @@ Production uses Resend. The Worker schedules Resend delivery with `ExecutionCont
 
 Workers observability is configured to redact query strings so verification tokens are not retained in request logs or traces.
 
+## Authentication rate limiting
+
+Better Auth rate limiting is explicitly enabled for every environment and stores its counters in D1 so protection is shared across Worker isolates. Client addresses come from Cloudflare's `CF-Connecting-IP` header. Better Auth's built-in sensitive-endpoint rules remain active, and Account registration is limited to five attempts per client address per minute.
+
+Rate-limit counters are disposable operational data in the `rateLimit` table. Better Auth creates, updates, and removes these records; application code must not use them as Account data. A rejected request returns HTTP 429 with an `X-Retry-After` header.
+
 Before deploying:
 
 1. Verify the sending domain in Resend and set `EMAIL_FROM` in `wrangler.jsonc` to an address on that domain.

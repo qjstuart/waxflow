@@ -14,11 +14,17 @@ export default defineConfig({
   projects: [
     {
       name: 'laptop',
-      use: { viewport: { width: 1280, height: 800 } },
+      use: {
+        viewport: { width: 1280, height: 800 },
+        extraHTTPHeaders: { 'cf-connecting-ip': '192.0.2.1' },
+      },
     },
     {
       name: 'phone',
-      use: { viewport: { width: 390, height: 844 } },
+      use: {
+        viewport: { width: 390, height: 844 },
+        extraHTTPHeaders: { 'cf-connecting-ip': '192.0.2.2' },
+      },
     },
   ],
   webServer: {

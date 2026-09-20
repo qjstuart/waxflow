@@ -33,9 +33,7 @@ function readVerificationError(): string | null {
   return null
 }
 
-export function AccountAccessPanel({
-  onSignedIn,
-}: AccountAccessPanelProps) {
+export function AccountAccessPanel({ onSignedIn }: AccountAccessPanelProps) {
   const [view, setView] = useState<AccountAccessView>("sign-in")
   const [notice, setNotice] = useState<string | null>(readVerificationNotice)
   const [error, setError] = useState<string | null>(readVerificationError)
@@ -59,14 +57,16 @@ export function AccountAccessPanel({
     setIsSubmitting(false)
     if (result.error) {
       setError(
-        "We could not create that Account. Check the details and try again.",
+        result.error.status === 429
+          ? "Too many attempts. Wait a moment and try again."
+          : "We could not create that account. Check the details and try again.",
       )
       return
     }
 
     setView("check-email")
     setNotice(
-      "If an Account can be created with that email address, we’ll send you a verification message.",
+      "If an account can be created with that email address, we’ll send you a verification message.",
     )
   }
 
@@ -86,9 +86,11 @@ export function AccountAccessPanel({
     setIsSubmitting(false)
     if (result.error) {
       setError(
-        result.error.status === 403
-          ? "Check your email to verify your account."
-          : "Email or password is incorrect.",
+        result.error.status === 429
+          ? "Too many attempts. Wait a moment and try again."
+          : result.error.status === 403
+            ? "Check your email to verify your account."
+            : "Email or password is incorrect.",
       )
       return
     }

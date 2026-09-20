@@ -10,6 +10,16 @@ export function createAuth(request: Request, env: Env, ctx: ExecutionContext) {
     database: env.DB,
     secret: env.BETTER_AUTH_SECRET,
     trustedOrigins: [origin],
+    rateLimit: {
+      enabled: true,
+      storage: "database",
+      customRules: {
+        "/sign-up/email": {
+          window: 60,
+          max: 5,
+        },
+      },
+    },
     emailAndPassword: {
       enabled: true,
       autoSignIn: false,
@@ -44,6 +54,9 @@ export function createAuth(request: Request, env: Env, ctx: ExecutionContext) {
       },
     },
     advanced: {
+      ipAddress: {
+        ipAddressHeaders: ["cf-connecting-ip"],
+      },
       database: {
         generateId: "uuid",
       },
