@@ -88,8 +88,6 @@ Library Search returns only Tracks. It matches case-insensitive substrings in ar
 
 ## Remaining implementation decisions
 
-- Decide whether the SPA needs a client-side router; TanStack Router is the
-  current candidate.
 - Contract-test Discogs search and choose the lowest-request backend strategy that satisfies the single-box search requirement.
 - Define the full Account snapshot format and exact automatic cache-refresh
   triggers. The explicit DJ-triggered refresh, Trusted Device confirmation,
