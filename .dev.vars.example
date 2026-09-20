@@ -1,0 +1,5 @@
+# Generate a unique value with: openssl rand -base64 32
+BETTER_AUTH_SECRET="replace-with-a-random-secret"
+
+# Required when EMAIL_DELIVERY_MODE is "resend".
+RESEND_API_KEY="re_replace_me"

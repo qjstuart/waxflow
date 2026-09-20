@@ -7,11 +7,47 @@
 	"name": "waxflow",
 	"main": "worker/index.ts",
 	"compatibility_date": "2026-09-16",
+	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
-		"not_found_handling": "single-page-application"
+		"not_found_handling": "single-page-application",
+		"run_worker_first": ["/api/*"]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "waxflow",
+			"database_id": "dcfc28e3-a72a-4a58-b4c1-33055d01fd26",
+			"migrations_dir": "migrations"
+		}
+	],
+	"vars": {
+		"EMAIL_DELIVERY_MODE": "resend",
+		"EMAIL_FROM": "Waxflow <accounts@informant.theloungeconjecture.com>"
+	},
+	"secrets": {
+		"required": ["BETTER_AUTH_SECRET", "RESEND_API_KEY"]
+	},
+	"env": {
+		"e2e": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "waxflow-e2e",
+					"migrations_dir": "migrations"
+				}
+			],
+			"vars": {
+				"EMAIL_DELIVERY_MODE": "capture",
+				"EMAIL_FROM": "Waxflow <accounts@informant.theloungeconjecture.com>"
+			},
+			"secrets": {
+				"required": ["BETTER_AUTH_SECRET"]
+			}
+		}
 	},
 	"observability": {
-		"enabled": true
+		"enabled": true,
+		"redact_query_string": true
 	},
 	"upload_source_maps": true
 	/**

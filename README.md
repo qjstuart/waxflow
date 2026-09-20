@@ -1,4 +1,19 @@
-# React + TypeScript + Vite
+# Waxflow
+
+Waxflow is a private DJ Transition memory aid built as a React SPA and Cloudflare Worker.
+
+## Development
+
+Copy `.dev.vars.example` to `.dev.vars`, replace its placeholders, then run `npm run dev`. The development command applies pending migrations to local D1 before starting Vite. See `docs/authentication.md` for D1, Better Auth, and Resend setup.
+
+Quality checks:
+
+- `npm run typecheck`
+- `npm run lint`
+- `npm test`
+- `npm run test:e2e`
+
+## React starter notes
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
