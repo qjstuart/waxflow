@@ -69,7 +69,9 @@ function App() {
     }
 
     setView("check-email")
-    setNotice(`We sent a verification message to ${email}.`)
+    setNotice(
+      "If an Account can be created with that email address, we’ll send you a verification message.",
+    )
   }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
@@ -80,13 +82,18 @@ function App() {
     const data = new FormData(event.currentTarget)
 
     const result = await authClient.signIn.email({
+      callbackURL: "/?verified=true",
       email: String(data.get("email")),
       password: String(data.get("password")),
     })
 
     setIsSubmitting(false)
     if (result.error) {
-      setError("Email or password is incorrect.")
+      setError(
+        result.error.status === 403
+          ? "Check your email to verify your account."
+          : "Email or password is incorrect.",
+      )
       return
     }
 
