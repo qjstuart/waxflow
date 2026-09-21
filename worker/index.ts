@@ -37,19 +37,21 @@ export default {
         env.EMAIL_DELIVERY_MODE === "capture"
       ) {
         const recipient = url.searchParams.get("recipient")
+        const kind = url.searchParams.get("kind")
         if (!recipient) {
           return jsonError("Recipient is required", 400)
         }
 
         const email = await env.DB.prepare(
-          `SELECT verificationUrl
+          `SELECT actionUrl
              FROM test_email
             WHERE recipient = ?
+              AND (? IS NULL OR kind = ?)
             ORDER BY createdAt DESC
             LIMIT 1`,
         )
-          .bind(recipient)
-          .first<{ verificationUrl: string }>()
+          .bind(recipient, kind, kind)
+          .first<{ actionUrl: string }>()
 
         if (!email) {
           return jsonError("No captured message", 404)

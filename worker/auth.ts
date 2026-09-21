@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth"
-import { deliverVerificationEmail } from "./email.js"
+import { sendAccountEmail } from "./email.js"
 
 export function createAuth(request: Request, env: Env, ctx: ExecutionContext) {
   const origin = new URL(request.url).origin
@@ -24,34 +24,25 @@ export function createAuth(request: Request, env: Env, ctx: ExecutionContext) {
       enabled: true,
       autoSignIn: false,
       requireEmailVerification: true,
+      resetPasswordTokenExpiresIn: 60 * 60,
+      sendResetPassword: ({ user, url }) =>
+        sendAccountEmail(env, ctx, {
+          kind: "password-reset",
+          recipient: user.email,
+          url,
+        }),
     },
     emailVerification: {
       autoSignInAfterVerification: false,
       expiresIn: 60 * 60,
       sendOnSignIn: false,
       sendOnSignUp: true,
-      sendVerificationEmail: ({ user, url }) => {
-        const delivery = deliverVerificationEmail(env, {
+      sendVerificationEmail: ({ user, url }) =>
+        sendAccountEmail(env, ctx, {
+          kind: "verification",
           recipient: user.email,
           url,
-        })
-
-        if (env.EMAIL_DELIVERY_MODE === "capture") {
-          return delivery
-        }
-
-        ctx.waitUntil(
-          delivery.catch((error: unknown) => {
-            console.error(
-              JSON.stringify({
-                message: "verification email delivery failed",
-                error: error instanceof Error ? error.message : String(error),
-              }),
-            )
-          }),
-        )
-        return Promise.resolve()
-      },
+        }),
     },
     advanced: {
       ipAddress: {

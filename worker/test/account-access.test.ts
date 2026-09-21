@@ -14,6 +14,26 @@ function request(path: string, init?: RequestInit) {
   )
 }
 
+async function createVerifiedAccount(email: string, password: string) {
+  const registration = await request("/api/auth/sign-up/email", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ name: email, email, password, callbackURL: "/" }),
+  })
+  expect(registration.status).toBe(200)
+
+  const captured = await env.DB.prepare(
+    "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'verification' ORDER BY createdAt DESC LIMIT 1",
+  )
+    .bind(email)
+    .first<{ actionUrl: string }>()
+
+  const verification = await exports.default.fetch(
+    new Request(captured!.actionUrl, { redirect: "manual" }),
+  )
+  expect(verification.status).toBe(302)
+}
+
 describe("Account access", () => {
   it("does not create a session before email verification", async () => {
     const email = `dj-${crypto.randomUUID()}@example.com`
@@ -43,15 +63,15 @@ describe("Account access", () => {
     expect(accountBeforeVerification.status).toBe(401)
 
     const captured = await env.DB.prepare(
-      "SELECT verificationUrl FROM test_email WHERE recipient = ? ORDER BY createdAt DESC LIMIT 1",
+      "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'verification' ORDER BY createdAt DESC LIMIT 1",
     )
       .bind(email)
-      .first<{ verificationUrl: string }>()
+      .first<{ actionUrl: string }>()
 
-    expect(captured?.verificationUrl).toContain("/api/auth/verify-email")
+    expect(captured?.actionUrl).toContain("/api/auth/verify-email")
 
     const verification = await exports.default.fetch(
-      new Request(captured!.verificationUrl, { redirect: "manual" }),
+      new Request(captured!.actionUrl, { redirect: "manual" }),
     )
     expect(verification.status).toBe(302)
 
@@ -80,15 +100,15 @@ describe("Account access", () => {
     expect(registration.status).toBe(200)
 
     const captured = await env.DB.prepare(
-      "SELECT verificationUrl FROM test_email WHERE recipient = ? ORDER BY createdAt DESC LIMIT 1",
+      "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'verification' ORDER BY createdAt DESC LIMIT 1",
     )
       .bind(email)
-      .first<{ verificationUrl: string }>()
+      .first<{ actionUrl: string }>()
 
-    expect(captured?.verificationUrl).toContain("/api/auth/verify-email")
+    expect(captured?.actionUrl).toContain("/api/auth/verify-email")
 
     const verification = await exports.default.fetch(
-      new Request(captured!.verificationUrl, { redirect: "manual" }),
+      new Request(captured!.actionUrl, { redirect: "manual" }),
     )
     expect(verification.status).toBe(302)
 
@@ -139,6 +159,130 @@ describe("Account access", () => {
     await expect(response.json()).resolves.toMatchObject({
       message: "Invalid email or password",
     })
+  })
+
+  it("gives the same neutral response whether or not a recovery email identifies an Account", async () => {
+    const email = `dj-${crypto.randomUUID()}@example.com`
+    await createVerifiedAccount(email, "correct horse battery staple")
+
+    const existing = await request("/api/auth/request-password-reset", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, redirectTo: "/?reset=true" }),
+    })
+    const missing = await request("/api/auth/request-password-reset", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email: `missing-${crypto.randomUUID()}@example.com`,
+        redirectTo: "/?reset=true",
+      }),
+    })
+
+    expect(existing.status).toBe(200)
+    expect(missing.status).toBe(200)
+    await expect(existing.json()).resolves.toEqual(await missing.json())
+
+    const captured = await env.DB.prepare(
+      "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'password-reset' ORDER BY createdAt DESC LIMIT 1",
+    )
+      .bind(email)
+      .first<{ actionUrl: string }>()
+    expect(captured?.actionUrl).toContain("/api/auth/reset-password/")
+  })
+
+  it("resets a password once and rejects the former password", async () => {
+    const email = `dj-${crypto.randomUUID()}@example.com`
+    const formerPassword = "correct horse battery staple"
+    const newPassword = "a newly remembered password"
+    await createVerifiedAccount(email, formerPassword)
+
+    const recovery = await request("/api/auth/request-password-reset", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, redirectTo: "/?reset=true" }),
+    })
+    expect(recovery.status).toBe(200)
+
+    const captured = await env.DB.prepare(
+      "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'password-reset' ORDER BY createdAt DESC LIMIT 1",
+    )
+      .bind(email)
+      .first<{ actionUrl: string }>()
+    const token = new URL(captured!.actionUrl).pathname.split("/").at(-1)
+
+    const reset = await request("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ newPassword, token }),
+    })
+    expect(reset.status).toBe(200)
+
+    const reused = await request("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ newPassword: "another new password", token }),
+    })
+    expect(reused.status).toBe(400)
+
+    const formerSignIn = await request("/api/auth/sign-in/email", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password: formerPassword }),
+    })
+    expect(formerSignIn.status).toBe(401)
+
+    const newSignIn = await request("/api/auth/sign-in/email", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password: newPassword }),
+    })
+    expect(newSignIn.status).toBe(200)
+  })
+
+  it("rejects an expired recovery link without changing credentials", async () => {
+    const email = `dj-${crypto.randomUUID()}@example.com`
+    const password = "correct horse battery staple"
+    await createVerifiedAccount(email, password)
+
+    await request("/api/auth/request-password-reset", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, redirectTo: "/?reset=true" }),
+    })
+
+    const captured = await env.DB.prepare(
+      "SELECT actionUrl FROM test_email WHERE recipient = ? AND kind = 'password-reset' ORDER BY createdAt DESC LIMIT 1",
+    )
+      .bind(email)
+      .first<{ actionUrl: string }>()
+    const token = new URL(captured!.actionUrl).pathname.split("/").at(-1)
+
+    await env.DB.prepare(
+      "UPDATE verification SET expiresAt = 0 WHERE identifier = ?",
+    )
+      .bind(`reset-password:${token}`)
+      .run()
+
+    const expiredLink = await exports.default.fetch(
+      new Request(captured!.actionUrl, { redirect: "manual" }),
+    )
+    expect(expiredLink.status).toBe(302)
+    expect(expiredLink.headers.get("location")).toContain("error=INVALID_TOKEN")
+
+    const expiredReset = await request("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ newPassword: "a newly remembered password", token }),
+    })
+    expect(expiredReset.status).toBe(400)
+
+    const signIn = await request("/api/auth/sign-in/email", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
+    expect(signIn.status).toBe(200)
   })
 
   it("rate limits Account registrations from one client address", async () => {

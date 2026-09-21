@@ -2,11 +2,11 @@
 
 Waxflow uses Better Auth email-and-password Accounts backed by the `DB` D1 binding. Better Auth's generated UUID is the stable internal Account identifier; email addresses are login and delivery attributes, not identifiers for app-owned data.
 
-## Verification email delivery
+## Account email delivery
 
-Production uses Resend. The Worker schedules Resend delivery with `ExecutionContext.waitUntil()` so the authentication response does not reveal delivery timing. Delivery failures are written as structured Worker errors without logging the recipient, verification URL, or token.
+Production uses Resend for email verification and password recovery. The Worker schedules Resend delivery with `ExecutionContext.waitUntil()` so authentication responses do not reveal delivery timing. Delivery failures are written as structured Worker errors without logging the recipient, action URL, or token.
 
-Workers observability is configured to redact query strings so verification tokens are not retained in request logs or traces.
+Workers observability is configured to redact query strings so verification and password-reset tokens are not retained in request logs or traces.
 
 ## Authentication rate limiting
 
@@ -26,6 +26,6 @@ Secrets are declared by name in `wrangler.jsonc` so deploys fail when they are m
 
 ## Deterministic browser delivery
 
-The `e2e` Cloudflare environment sets `EMAIL_DELIVERY_MODE` to `capture`. In that mode only, verification messages are written to the disposable local D1 database and can be read from `/api/test/emails/latest`. The endpoint returns 404 in production mode. Browser tests use the captured Better Auth verification URL and never call Resend.
+The `e2e` Cloudflare environment sets `EMAIL_DELIVERY_MODE` to `capture`. In that mode only, verification and password-reset messages are written to the disposable local D1 database and can be read from `/api/test/emails/latest`. The endpoint returns 404 in production mode. Browser tests use captured Better Auth action URLs and never call Resend.
 
 Run the Worker integration tests with `npm test` and the phone-and-laptop browser journey with `npm run test:e2e`.
