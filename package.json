@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler d1 migrations apply DB --local && vite",
+    "dev": "wrangler d1 migrations apply DB --local && vite --host",
     "dev:e2e": "wrangler d1 migrations apply DB --local --env e2e && vite --port 4173",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
