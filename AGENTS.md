@@ -31,6 +31,18 @@ Cloudflare's React starter.
 
 Do not silently assume or encode undecided choices.
 
+## Code organization
+
+- Keep files under roughly 300 lines wherever practical. This is a guideline,
+  not a hard limit, but treat a longer file as a prompt to consider splitting it
+  along cohesive responsibilities so the code remains easy to read and reason
+  about.
+- Do not split a file merely to satisfy the line count when doing so would make
+  the code less cohesive or harder to navigate.
+- Prefer `async`/`await` with `try`/`catch` over Promise `.then()`/`.catch()`
+  chains wherever practical. Use Promise chaining only when it makes the code
+  meaningfully clearer or is required by an API.
+
 ## Agent skills
 
 ### Issue tracker
