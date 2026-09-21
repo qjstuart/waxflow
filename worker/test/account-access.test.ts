@@ -33,6 +33,13 @@ describe("Account registration and sessions", () => {
       message: "Email not verified",
     })
 
+    const verificationMessages = await env.DB.prepare(
+      "SELECT COUNT(*) AS count FROM test_email WHERE recipient = ? AND kind = 'verification'",
+    )
+      .bind(email)
+      .first<{ count: number }>()
+    expect(verificationMessages?.count).toBe(2)
+
     const accountBeforeVerification = await request("/api/account")
     expect(accountBeforeVerification.status).toBe(401)
 

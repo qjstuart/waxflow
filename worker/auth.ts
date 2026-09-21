@@ -35,7 +35,7 @@ export function createAuth(request: Request, env: Env, ctx: ExecutionContext) {
     emailVerification: {
       autoSignInAfterVerification: false,
       expiresIn: 60 * 60,
-      sendOnSignIn: false,
+      sendOnSignIn: true,
       sendOnSignUp: true,
       sendVerificationEmail: ({ user, url }) =>
         sendAccountEmail(env, ctx, {

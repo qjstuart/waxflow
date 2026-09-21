@@ -22,7 +22,7 @@ type AccountAccessPanelProps = {
 
 function readVerificationNotice(): string | null {
   const params = new URLSearchParams(window.location.search)
-  return params.get("verified") === "true"
+  return params.get("verified") === "true" && !params.has("error")
     ? "Email verified. Sign in to open your Library."
     : null
 }

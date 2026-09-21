@@ -96,6 +96,17 @@ test("an invalid verification attempt has a safe error", async ({ page }) => {
   )
 })
 
+test("an expired verification callback does not show a success notice", async ({
+  page,
+}) => {
+  await page.goto("/?verified=true&error=TOKEN_EXPIRED")
+
+  await expect(page.getByRole("alert")).toContainText(
+    "This verification link is invalid or has expired",
+  )
+  await expect(page.getByRole("status")).toHaveCount(0)
+})
+
 test("a DJ recovers Account access with a one-time reset message", async ({
   page,
   request,
