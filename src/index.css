@@ -33,6 +33,10 @@
   --brand-cream: #fff8ec;
   --eyebrow: var(--brand-orange-strong);
   --notice: var(--brand-orange-strong);
+  --navigation: rgb(244 240 231 / 90%);
+  --search-field: rgb(255 248 236 / 55%);
+  --empty-state: rgb(255 248 236 / 40%);
+  --empty-state-mark-shadow: inset 0 0 0 1.25rem rgb(255 255 255 / 8%);
   --account-access-hero-background:
     radial-gradient(
       circle at 78% 18%,
@@ -75,6 +79,10 @@
   --color-brand-cream: var(--brand-cream);
   --color-eyebrow: var(--eyebrow);
   --color-notice: var(--notice);
+  --color-navigation: var(--navigation);
+  --color-search-field: var(--search-field);
+  --color-empty-state: var(--empty-state);
+  --shadow-empty-state-mark: var(--empty-state-mark-shadow);
   --background-image-account-access-hero: var(
     --account-access-hero-background
   );

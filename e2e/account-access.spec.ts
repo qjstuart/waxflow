@@ -5,6 +5,29 @@ function uniqueClientAddress() {
   return `198.51.${suffix[0]}.${suffix[1]}`
 }
 
+test("the Account headings stay within their columns", async ({ page }) => {
+  await page.goto("/")
+
+  const heroHeading = page.getByRole("heading", {
+    name: "Remember the mixes that move you.",
+  })
+  const panelHeading = page.getByRole("heading", {
+    name: "Sign in to Waxflow",
+  })
+
+  for (const width of [768, 900, 1024, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 800 })
+    for (const heading of [heroHeading, panelHeading]) {
+      await expect(heading).toBeVisible()
+      expect(
+        await heading.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+      ).toBe(true)
+    }
+  }
+})
+
 test("a DJ registers, verifies, signs in, opens Library Search, and signs out", async ({
   page,
   request,
@@ -65,6 +88,17 @@ test("a DJ registers, verifies, signs in, opens Library Search, and signs out", 
   await expect(
     page.getByRole("heading", { name: "Your Library is empty" }),
   ).toBeVisible()
+  const librarySearch = page.getByRole("searchbox", {
+    name: "Search your Library",
+  })
+  await librarySearch.fill("personally tested")
+  await expect(librarySearch).toHaveValue("personally tested")
+  await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible()
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
 
   const accountBeforeSignOut = await page.evaluate(async () => {
     const response = await fetch("/api/account")

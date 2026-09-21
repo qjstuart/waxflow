@@ -27,7 +27,9 @@ function App() {
   if (isInitializingSession) {
     return (
       <main className="grid min-h-screen place-items-center">
-        Opening Waxflow…
+        <p className="font-mono text-sm text-muted-foreground" role="status">
+          Opening Waxflow…
+        </p>
       </main>
     )
   }

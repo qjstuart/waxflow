@@ -1,60 +1,11 @@
-import type { ComponentProps, ElementType, ReactNode } from "react"
+import type { ComponentProps, ReactNode } from "react"
 import { cva } from "class-variance-authority"
 
+import { Eyebrow } from "@/components/appPresentation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-
-const eyebrowVariants = cva(
-  "mb-4 font-mono text-xs tracking-widest uppercase",
-  {
-    variants: {
-      tone: {
-        default: "text-eyebrow",
-        hero: "text-brand-orange-soft",
-      },
-    },
-    defaultVariants: {
-      tone: "default",
-    },
-  },
-)
-
-type AccountAccessEyebrowProps = {
-  children: ReactNode
-  tone?: "default" | "hero"
-}
-
-export function AccountAccessEyebrow({
-  children,
-  tone,
-}: AccountAccessEyebrowProps) {
-  return <p className={eyebrowVariants({ tone })}>{children}</p>
-}
-
-const titleVariants = cva("leading-none font-bold tracking-tighter", {
-  variants: {
-    scale: {
-      hero: "mt-12 max-w-xs text-5xl md:mt-0 md:text-7xl lg:text-8xl",
-      panel: "mb-8 text-4xl md:text-6xl",
-    },
-  },
-})
-
-type AccountAccessTitleProps = {
-  as: ElementType
-  children: ReactNode
-  scale: "hero" | "panel"
-}
-
-export function AccountAccessTitle({
-  as: Title,
-  children,
-  scale,
-}: AccountAccessTitleProps) {
-  return <Title className={titleVariants({ scale })}>{children}</Title>
-}
 
 type AccountAccessHeaderProps = {
   eyebrow: string
@@ -67,10 +18,10 @@ export function AccountAccessHeader({
 }: AccountAccessHeaderProps) {
   return (
     <>
-      <AccountAccessEyebrow>{eyebrow}</AccountAccessEyebrow>
-      <AccountAccessTitle as="h2" scale="panel">
+      <Eyebrow className="mb-4">{eyebrow}</Eyebrow>
+      <h2 className="mb-8 text-[clamp(2.25rem,4vw,3.75rem)] leading-none font-bold tracking-tighter">
         {heading}
-      </AccountAccessTitle>
+      </h2>
     </>
   )
 }
@@ -122,11 +73,9 @@ export function AccountAccessTextButton({
 }: ComponentProps<typeof Button>) {
   return (
     <Button
-      variant="link"
-      className={cn(
-        "h-auto p-0 font-bold text-accent underline decoration-1 underline-offset-4 hover:text-accent/80",
-        className,
-      )}
+      variant="accentLink"
+      size="content"
+      className={className}
       {...props}
     />
   )
@@ -138,10 +87,9 @@ export function AccountAccessSubmitButton({
 }: ComponentProps<typeof Button>) {
   return (
     <Button
-      className={cn(
-        "mt-2 min-h-12 px-5 py-3 font-bold hover:bg-accent",
-        className,
-      )}
+      variant="submit"
+      size="form"
+      className={cn("mt-2", className)}
       type="submit"
       {...props}
     />
@@ -163,7 +111,7 @@ export function AccountAccessField({
     <Label className="grid gap-2 text-sm font-bold">
       {children}
       <Input
-        className="min-h-12 bg-card/60 px-4 py-3 text-base md:text-base"
+        variant="form"
         {...props}
       />
     </Label>
