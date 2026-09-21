@@ -19,8 +19,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         accentLink:
           "font-bold text-accent underline decoration-1 underline-offset-4 hover:text-accent/80",
-        submit:
-          "bg-primary font-bold text-primary-foreground hover:bg-accent",
+        submit: "bg-primary font-bold text-primary-foreground hover:bg-accent",
       },
       size: {
         default:
@@ -43,7 +42,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 )
 
 function Button({

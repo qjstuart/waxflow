@@ -28,10 +28,7 @@ function Input({ className, type, variant, ...props }: InputProps) {
     <InputPrimitive
       type={type}
       data-slot="input"
-      className={cn(
-        inputVariants({ variant }),
-        className
-      )}
+      className={cn(inputVariants({ variant }), className)}
       {...props}
     />
   )
