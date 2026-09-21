@@ -30,6 +30,13 @@ Library Search is the default destination after sign-in. Persistent navigation c
 - Discogs Search
 - Add Track
 
+A Theme control is available in authenticated navigation on phone and laptop.
+System is the default and follows operating-system changes live, including
+before sign-in. Light and Dark are browser-profile overrides stored locally,
+work without connectivity, and remain in effect across sign-out and Account
+changes even though the control is not shown before sign-in. Theme preference
+is not Account data and is not stored in D1.
+
 Track details and Transition creation are contextual screens reached through the Library.
 
 Library Search returns only Tracks. It matches case-insensitive substrings in artist, title, Track Notes, and Transition Notes. A Transition Note match returns both participating Tracks as ordinary results without displaying match context; a Self-Transition returns its Track once. Each distinct Track record appears at most once even when several values match, while deliberately separate Potential Duplicates remain separate results. BPM is not searchable in the MVP.

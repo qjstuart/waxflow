@@ -5,6 +5,26 @@ function uniqueClientAddress() {
   return `198.51.${suffix[0]}.${suffix[1]}`
 }
 
+test("System follows the operating-system theme and invalid storage falls back safely", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("waxflow-theme", "invalid")
+  })
+  await page.emulateMedia({ colorScheme: "dark" })
+  await page.goto("/")
+
+  await expect(page.getByLabel("Theme")).toHaveCount(0)
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-theme-preference",
+    "system",
+  )
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
+
+  await page.emulateMedia({ colorScheme: "light" })
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light")
+})
+
 test("the Account headings stay within their columns", async ({ page }) => {
   await page.goto("/")
 
@@ -29,6 +49,7 @@ test("the Account headings stay within their columns", async ({ page }) => {
 })
 
 test("a DJ registers, verifies, signs in, opens Library Search, and signs out", async ({
+  context,
   page,
   request,
 }) => {
@@ -85,9 +106,17 @@ test("a DJ registers, verifies, signs in, opens Library Search, and signs out", 
   await expect(
     page.getByRole("heading", { name: "Library Search" }),
   ).toBeVisible()
+  await context.setOffline(true)
+  await page.getByLabel("Theme").selectOption("dark")
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
+  expect(
+    await page.evaluate(() => window.localStorage.getItem("waxflow-theme")),
+  ).toBe("dark")
+  await context.setOffline(false)
   await expect(
     page.getByRole("heading", { name: "Your Library is empty" }),
   ).toBeVisible()
+  await page.setViewportSize({ width: 320, height: 700 })
   const librarySearch = page.getByRole("searchbox", {
     name: "Search your Library",
   })
@@ -112,11 +141,16 @@ test("a DJ registers, verifies, signs in, opens Library Search, and signs out", 
   await expect(
     page.getByRole("heading", { name: "Sign in to Waxflow" }),
   ).toBeVisible()
+  await expect(page.getByLabel("Theme")).toHaveCount(0)
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
 
   const accountAfterSignOut = await page.evaluate(async () =>
     fetch("/api/account").then((response) => response.status),
   )
   expect(accountAfterSignOut).toBe(401)
+
+  await page.reload()
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
 })
 
 test("an invalid verification attempt has a safe error", async ({ page }) => {

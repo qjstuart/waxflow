@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import { Eyebrow, Wordmark } from "@/components/appPresentation"
+import { ThemeControl } from "@/components/themeControl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,10 +25,11 @@ export function LibrarySearchPage({
 
   return (
     <div className="min-h-screen">
-      <header className="flex min-h-18 items-center justify-between border-b bg-navigation px-5 md:px-12 lg:px-20">
+      <header className="flex min-h-18 flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b bg-navigation px-5 py-3 md:px-12 lg:px-20">
         <Wordmark href="/" aria-label="Waxflow home" />
-        <div className="flex items-center gap-4 text-sm">
-          <span className="hidden md:inline">{email}</span>
+        <div className="flex items-center gap-3 text-sm md:gap-4">
+          <span className="hidden lg:inline">{email}</span>
+          <ThemeControl />
           <Button
             variant="secondary"
             size="navigation"

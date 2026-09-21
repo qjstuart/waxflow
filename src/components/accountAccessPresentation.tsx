@@ -26,11 +26,23 @@ export function AccountAccessHeader({
   )
 }
 
-const feedbackVariants = cva("mb-6 border-l-4 px-4 py-3 leading-normal", {
+const feedbackVariants = cva(
+  "mb-6 flex items-start gap-3 border-l-4 px-4 py-3 leading-normal",
+  {
+    variants: {
+      tone: {
+        error: "border-destructive bg-destructive/10",
+        notice: "border-notice bg-notice/10",
+      },
+    },
+  },
+)
+
+const feedbackMarkVariants = cva("mt-1 size-3 shrink-0 border-2", {
   variants: {
     tone: {
-      error: "border-destructive bg-destructive/10",
-      notice: "border-notice bg-notice/10",
+      error: "rotate-45 border-destructive",
+      notice: "rounded-full border-notice",
     },
   },
 })
@@ -49,6 +61,10 @@ function AccountAccessFeedback({
       className={feedbackVariants({ tone })}
       role={tone === "error" ? "alert" : "status"}
     >
+      <span
+        className={feedbackMarkVariants({ tone })}
+        aria-hidden="true"
+      />
       {message}
     </p>
   )
