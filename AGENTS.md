@@ -43,6 +43,14 @@ Do not silently assume or encode undecided choices.
   chains wherever practical. Use Promise chaining only when it makes the code
   meaningfully clearer or is required by an API.
 
+## App-owned UI
+
+- Read `docs/design-system.md` before changing app-owned UI or design tokens.
+- Follow its Tailwind, token, component, responsive, interaction, motion, and
+  accessibility conventions.
+- Generated or imported UI primitive internals are exempt unless they are being
+  deliberately customized for Waxflow.
+
 ## Agent skills
 
 ### Issue tracker

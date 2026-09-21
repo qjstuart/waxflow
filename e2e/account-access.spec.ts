@@ -32,7 +32,7 @@ test("a DJ registers, verifies, signs in, opens Library Search, and signs out", 
     page.getByRole("heading", { name: "Check your email" }),
   ).toBeVisible()
   await expect(page.getByRole("status")).toHaveText(
-    "If an account can be created with that email address, we’ll send you a verification message.",
+    "If an Account can be created with that email address, we’ll send you a verification message.",
   )
 
   await page.getByRole("button", { name: "Back to sign in" }).click()

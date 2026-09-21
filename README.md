@@ -6,7 +6,7 @@ Waxflow is a private DJ Transition memory aid built as a React SPA and Cloudflar
 
 Copy `.dev.vars.example` to `.dev.vars`, replace its placeholders, then run `npm run dev`. The development command applies pending migrations to local D1 before starting Vite. See `docs/authentication.md` for D1, Better Auth, and Resend setup.
 
-Tailwind CSS is available throughout the React application through the Vite plugin and the global import in `src/index.css`. This project uses Tailwind CSS v4's CSS-first configuration, so there is no `tailwind.config.js` file by default.
+Tailwind CSS is available throughout the React application through the Vite plugin and the global import in `src/index.css`. This project uses Tailwind CSS v4's CSS-first configuration, so there is no `tailwind.config.js` file by default. Read the [design-system guide](docs/design-system.md) before changing app-owned UI or design tokens.
 
 Quality checks:
 

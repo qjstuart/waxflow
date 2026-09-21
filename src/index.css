@@ -5,6 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Raw palette values belong here; components consume semantic roles below. */
   --background: #f4f0e7;
   --foreground: #161513;
   --card: #fff8ec;
@@ -24,9 +25,27 @@
   --input: rgb(22 21 19 / 16%);
   --ring: #442f73;
   --brand-orange: #ef5a32;
+  --brand-orange-strong: #a63a18;
+  --brand-orange-soft: #ffb297;
   --brand-purple: #442f73;
+  --brand-purple-deep: #251645;
+  --brand-purple-warm: #6b365b;
   --brand-cream: #fff8ec;
-  --radius: 0rem;
+  --eyebrow: var(--brand-orange-strong);
+  --notice: var(--brand-orange-strong);
+  --account-access-hero-background:
+    radial-gradient(
+      circle at 78% 18%,
+      rgb(239 90 50 / 80%),
+      transparent 24%
+    ),
+    linear-gradient(
+      145deg,
+      var(--brand-purple-deep) 0%,
+      var(--brand-purple) 58%,
+      var(--brand-purple-warm) 100%
+    );
+  --radius: 0.625rem;
 }
 
 @theme inline {
@@ -51,8 +70,14 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-brand-orange: var(--brand-orange);
+  --color-brand-orange-soft: var(--brand-orange-soft);
   --color-brand-purple: var(--brand-purple);
   --color-brand-cream: var(--brand-cream);
+  --color-eyebrow: var(--eyebrow);
+  --color-notice: var(--notice);
+  --background-image-account-access-hero: var(
+    --account-access-hero-background
+  );
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

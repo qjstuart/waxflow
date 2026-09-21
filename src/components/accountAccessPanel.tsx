@@ -88,7 +88,7 @@ export function AccountAccessPanel({ onSignedIn }: AccountAccessPanelProps) {
 
     setView("check-email")
     setNotice(
-      "If an account can be created with that email address, we’ll send you a verification message.",
+      "If an Account can be created with that email address, we’ll send you a verification message.",
     )
   }
 
@@ -144,7 +144,7 @@ export function AccountAccessPanel({ onSignedIn }: AccountAccessPanelProps) {
 
     setView("reset-email-sent")
     setNotice(
-      "If an account uses that email address, we’ll send a password reset message.",
+      "If an Account uses that email address, we’ll send a password reset message.",
     )
   }
 

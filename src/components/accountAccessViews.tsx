@@ -2,19 +2,13 @@ import type { FormEventHandler } from "react"
 
 import {
   AccountAccessError,
+  AccountAccessField,
   AccountAccessHeader,
   AccountAccessNotice,
+  AccountAccessSubmitButton,
+  AccountAccessTextButton,
   BackToSignIn,
-  textButtonClassName,
 } from "@/components/accountAccessPresentation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
-const inputClassName =
-  "min-h-[3.2rem] rounded-none bg-white/55 px-[0.9rem] py-3 text-base focus-visible:border-brand-purple focus-visible:ring-brand-purple/15 md:text-base"
-const submitButtonClassName =
-  "mt-2 min-h-13 rounded-none px-5 py-[0.85rem] font-bold hover:bg-brand-purple disabled:cursor-wait"
 
 type EmailSentViewProps = {
   eyebrow: string
@@ -62,29 +56,20 @@ export function PasswordRecoveryRequestView({
       <p className="mb-6">
         Enter your Account email address and we’ll send a reset link.
       </p>
-      <form className="grid gap-[1.2rem]" onSubmit={onSubmit}>
-        <Label className="grid gap-[0.55rem] text-[0.82rem] font-bold">
-          Email address
-          <Input
-            className={inputClassName}
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-        </Label>
-        <Button
-          className={submitButtonClassName}
-          type="submit"
-          disabled={isSubmitting}
+      <form className="grid gap-5" onSubmit={onSubmit}>
+        <AccountAccessField
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
         >
+          Email address
+        </AccountAccessField>
+        <AccountAccessSubmitButton disabled={isSubmitting}>
           {isSubmitting ? "Working…" : "Send reset link"}
-        </Button>
+        </AccountAccessSubmitButton>
       </form>
-      <BackToSignIn
-        className={`${textButtonClassName} mt-6`}
-        onClick={onBackToSignIn}
-      />
+      <BackToSignIn className="mt-6" onClick={onBackToSignIn} />
     </>
   )
 }
@@ -107,26 +92,20 @@ export function ResetPasswordView({
         heading="Choose a new password"
       />
       {error && <AccountAccessError message={error} />}
-      <form className="grid gap-[1.2rem]" onSubmit={onSubmit}>
-        <Label className="grid gap-[0.55rem] text-[0.82rem] font-bold">
-          New password
-          <Input
-            className={inputClassName}
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={128}
-            required
-          />
-        </Label>
-        <Button
-          className={submitButtonClassName}
-          type="submit"
-          disabled={isSubmitting}
+      <form className="grid gap-5" onSubmit={onSubmit}>
+        <AccountAccessField
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          maxLength={128}
+          required
         >
+          New password
+        </AccountAccessField>
+        <AccountAccessSubmitButton disabled={isSubmitting}>
           {isSubmitting ? "Working…" : "Save new password"}
-        </Button>
+        </AccountAccessSubmitButton>
       </form>
     </>
   )
@@ -159,58 +138,42 @@ export function CredentialsView({
       />
       {notice && <AccountAccessNotice message={notice} />}
       {error && <AccountAccessError message={error} />}
-      <form className="grid gap-[1.2rem]" onSubmit={onSubmit}>
-        <Label className="grid gap-[0.55rem] text-[0.82rem] font-bold">
-          Email address
-          <Input
-            className={inputClassName}
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-        </Label>
-        <Label className="grid gap-[0.55rem] text-[0.82rem] font-bold">
-          Password
-          <Input
-            className={inputClassName}
-            name="password"
-            type="password"
-            autoComplete={isRegistering ? "new-password" : "current-password"}
-            minLength={8}
-            required
-          />
-        </Label>
-        <Button
-          className={submitButtonClassName}
-          type="submit"
-          disabled={isSubmitting}
+      <form className="grid gap-5" onSubmit={onSubmit}>
+        <AccountAccessField
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
         >
+          Email address
+        </AccountAccessField>
+        <AccountAccessField
+          name="password"
+          type="password"
+          autoComplete={isRegistering ? "new-password" : "current-password"}
+          minLength={8}
+          required
+        >
+          Password
+        </AccountAccessField>
+        <AccountAccessSubmitButton disabled={isSubmitting}>
           {isSubmitting
             ? "Working…"
             : isRegistering
               ? "Create Account"
               : "Sign in"}
-        </Button>
+        </AccountAccessSubmitButton>
       </form>
       {!isRegistering && (
-        <Button
-          variant="link"
-          className={`${textButtonClassName} mt-4`}
-          onClick={onForgotPassword}
-        >
+        <AccountAccessTextButton className="mt-4" onClick={onForgotPassword}>
           Forgot your password?
-        </Button>
+        </AccountAccessTextButton>
       )}
       <p className="mt-6 text-sm">
         {isRegistering ? "Already have an Account?" : "New to Waxflow?"}{" "}
-        <Button
-          variant="link"
-          className={textButtonClassName}
-          onClick={onToggleMode}
-        >
+        <AccountAccessTextButton onClick={onToggleMode}>
           {isRegistering ? "Sign in" : "Create an Account"}
-        </Button>
+        </AccountAccessTextButton>
       </p>
     </>
   )
