@@ -106,6 +106,20 @@ phone and laptop widths and with keyboard navigation.
 ## Theming
 
 Theme support must work by swapping central semantic token values, not through
-scattered app-owned `dark:` color overrides. Light and dark themes should be
-designed independently for their environments rather than mechanically
-inverted. Theme behavior and the dark palette are introduced in issue #27.
+scattered app-owned `dark:` color overrides. Light and dark are independently
+designed token sets: Light emphasizes crisp separation in well-lit spaces;
+Dark softens large surfaces and contrast to reduce glare in low-light club
+environments while retaining WCAG AA text contrast and visible focus.
+
+System is the default preference and follows operating-system color-scheme
+changes live. In authenticated navigation, a DJ can choose Light or Dark as a
+browser-profile override. The unauthenticated shell applies the resolved theme
+but does not show the control. The override is local, available without
+connectivity, and independent of Account data. The pre-render bootstrap in
+`index.html` resolves the preference before React renders, and `ThemeProvider`
+owns preference changes afterward. Both set the resolved `color-scheme` so
+browser-native controls and surfaces match.
+
+Keep theme-aware artwork, gradients, translucent surfaces, interaction states,
+and status colors in the central tokens in `src/index.css`. Components consume
+only semantic or deliberate brand roles and must not select colors by theme.

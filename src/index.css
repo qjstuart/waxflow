@@ -2,10 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
-  /* Raw palette values belong here; components consume semantic roles below. */
+  /* Light is tuned for clarity and separation in well-lit environments. */
   --background: #f4f0e7;
   --foreground: #161513;
   --card: #fff8ec;
@@ -50,6 +48,55 @@
       var(--brand-purple-warm) 100%
     );
   --radius: 0.625rem;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Dark uses softened contrast to limit glare without sacrificing legibility. */
+  --background: #141217;
+  --foreground: #f2ede4;
+  --card: #211c25;
+  --card-foreground: #f2ede4;
+  --popover: #211c25;
+  --popover-foreground: #f2ede4;
+  --primary: #f2ede4;
+  --primary-foreground: #171419;
+  --secondary: #302936;
+  --secondary-foreground: #f2ede4;
+  --muted: #302936;
+  --muted-foreground: #beb5c1;
+  --accent: #c9b4ff;
+  --accent-foreground: #1b1424;
+  --destructive: #ff9c98;
+  --border: rgb(242 237 228 / 22%);
+  --input: rgb(242 237 228 / 28%);
+  --ring: #d4c2ff;
+  --brand-orange: #ff7952;
+  --brand-orange-strong: #ff9d7f;
+  --brand-orange-soft: #ffc1ad;
+  --brand-purple: #9e83e0;
+  --brand-purple-deep: #170f25;
+  --brand-purple-warm: #603653;
+  --brand-cream: #fff4e8;
+  --eyebrow: var(--brand-orange-strong);
+  --notice: var(--brand-orange-strong);
+  --navigation: rgb(20 18 23 / 92%);
+  --search-field: rgb(33 28 37 / 72%);
+  --empty-state: rgb(33 28 37 / 56%);
+  --empty-state-mark-shadow: inset 0 0 0 1.25rem rgb(255 255 255 / 10%);
+  --account-access-hero-background:
+    radial-gradient(
+      circle at 78% 18%,
+      rgb(255 121 82 / 55%),
+      transparent 25%
+    ),
+    linear-gradient(
+      145deg,
+      var(--brand-purple-deep) 0%,
+      #39265f 58%,
+      var(--brand-purple-warm) 100%
+    );
+  color-scheme: dark;
 }
 
 @theme inline {
